@@ -12,20 +12,21 @@
 <sys/types.h>	wait3, wait4 - 88
 <sys/stat.h>	stat, lstat, fstat - 61
 
-memset
-printf
-malloc
-free
-write
-unsleep
-gettimeofday
-pthread_create
-pthread_detach
-pthread_join
-pthread_mutex_init
-pthread_mutex_destroy
-pthread_mutex_lock
-pthread_mutex_unlock
+memset - заполняет первые len байт по указателю dest символом c
+printf - умный вывод на экран
+malloc - выделение памяти
+free - освобождение памяти
+write - вывод на экран
+usleep - приостанавливает работу потока, на время в микросекундах
+gettimeofday - заполняет структуру временем от начала эпохи
+pthread_create - создание потока
+pthread_join - ожидание завершения процесса
+pthread_detach - отсоединяет процесс (при завершении, все занимаемые им
+			ресурсы освобождаются и мы не можем отслеживать его завершение)
+pthread_mutex_init - создание мьютекса
+pthread_mutex_destroy - закрытие мьютекса
+pthread_mutex_lock - закрыть мьютекс
+pthread_mutex_unlock - открыть мьютекс
 
 
 ft_putendl("---");
@@ -36,3 +37,37 @@ ft_putendl("");
 write(1, "\n", 1);
 
 alias mm="make && ./minishell"
+
+//-----приvеh_работы_gettimeofday--------
+#include <sys/time.h>
+
+struct timeval tv1, tv2, dtv;
+struct timezone tz;
+
+void	time_start()
+{
+	gettimeofday(&tv1, &tz);
+}
+
+long	time_stop()
+{
+	gettimeofday(&tv2, &tz);
+	dtv.tv_sec = tv2.tv_sec - tv1.tv_sec;
+	dtv.tv_usec = tv2.tv_usec - tv1.tv_usec;
+	if(dtv.tv_usec<0)
+	{
+		dtv.tv_sec--;
+		dtv.tv_usec+=1000000;
+	}
+	return (dtv.tv_sec * 1000 + dtv.tv_usec / 1000);
+}
+
+main()
+
+{
+	...
+	time_start();
+		/* какие-то действия */
+	printf("Time: %ld\n", time_stop());
+	...
+}

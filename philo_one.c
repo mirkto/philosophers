@@ -10,10 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <stdlib.h>
+#include <unistd.h>//usleep
+#include <stdlib.h>//atoi
 #include <stdio.h>
 #include <ctype.h>//isdigit
+#include <pthread.h>
+#include <string.h>//memset
 
 typedef struct	s_param
 {
@@ -29,7 +31,7 @@ int		main(int argc, char **argv)
 	int		arg;
 	int		len;
 	t_param	all;
-
+	//--------check_param_number---------
 	if (argc < 5 || argc > 6)
 	{
 		write(1, "four or five argument only!\n", 28);
