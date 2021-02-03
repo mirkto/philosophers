@@ -28,6 +28,11 @@ pthread_mutex_destroy - закрытие мьютекса
 pthread_mutex_lock - закрыть мьютекс
 pthread_mutex_unlock - открыть мьютекс
 
+колличество философов и вилок - number_of_philosophers;
+время смерти, если столько без еды - time_to_die;
+время на еду - time_to_eat;
+время на сон - time_to_sleep;
+сколько надо поесть всем - number_of_times_each_philosopher_must_eat;
 
 ft_putendl("---");
 
@@ -38,7 +43,7 @@ write(1, "\n", 1);
 
 alias mm="make && ./minishell"
 
-//-----приvеh_работы_gettimeofday--------
+//-----пример_работы_gettimeofday--------
 #include <sys/time.h>
 
 struct timeval tv1, tv2, dtv;
@@ -54,10 +59,10 @@ long	time_stop()
 	gettimeofday(&tv2, &tz);
 	dtv.tv_sec = tv2.tv_sec - tv1.tv_sec;
 	dtv.tv_usec = tv2.tv_usec - tv1.tv_usec;
-	if(dtv.tv_usec<0)
+	if(dtv.tv_usec < 0)
 	{
 		dtv.tv_sec--;
-		dtv.tv_usec+=1000000;
+		dtv.tv_usec += 1000000;
 	}
 	return (dtv.tv_sec * 1000 + dtv.tv_usec / 1000);
 }
