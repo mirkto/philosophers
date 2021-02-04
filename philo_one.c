@@ -16,6 +16,7 @@
 #include <ctype.h>//isdigit
 #include <pthread.h>
 #include <string.h>//memset
+#include <sys/time.h>//gettimeofday
 
 typedef struct	s_param
 {
@@ -25,96 +26,57 @@ typedef struct	s_param
 	long		time_to_sleep;
 	long		number_of_times_each_philosopher_must_eat;
 	long		timer;
+	int			num;
 }				t_param;
 
-pthread_t		g_t1, g_t2;
-pthread_t		g_p1, g_p2;
+// pthread_t		g_t1, g_t2;
+pthread_t		g_p;
 pthread_mutex_t	g_mutex;
-t_param			all;
+struct timeval	g_tv1, g_tv2, g_dtv;
+struct timezone	g_tz;
 
-void	*print1(void *buf)
+void	time_start()
 {
-	int		i;
-	char	c;
-
-	c = '+';
-	i = 0;
-	// pthread_mutex_lock(&mutex);
-	while (i < 5)
-	{
-		pthread_mutex_lock(&g_mutex);
-		i++;
-		printf("%i%c ", i, c);
-		write(1, "/\\| ", 4);
-		write(1, (char *)buf, strlen(buf));
-		// usleep(100000);
-		pthread_mutex_unlock(&g_mutex);
-		usleep(1);
-	}
-	// pthread_mutex_unlock(&mutex);
-	return (NULL);
+	gettimeofday(&g_tv1, &g_tz);
 }
 
-void	*print2(void *buf)
+long	time_stop()
 {
-	int		i;
-	char	c;
-
-	c = '-';
-	i = 0;
-	// pthread_mutex_lock(&mutex);
-	while (i < 5)
-	{
-		pthread_mutex_lock(&g_mutex);
-		i++;
-		printf("%i%c ", i, c);
-		write(1, "\\/| ", 4);
-		write(1, (char *)buf, strlen(buf));
-		// usleep(100000);
-		pthread_mutex_unlock(&g_mutex);
-		usleep(1);
-	}
-	// pthread_mutex_unlock(&mutex);
-	return (NULL);
+	gettimeofday(&g_tv2, &g_tz);
+	g_dtv.tv_sec = g_tv2.tv_sec - g_tv1.tv_sec;
+	g_dtv.tv_usec = g_tv2.tv_usec - g_tv1.tv_usec;
+	// if(g_dtv.tv_usec < 0)
+	// {
+	// 	g_dtv.tv_sec--;
+	// 	g_dtv.tv_usec += 1000000;
+	// }
+	return (g_dtv.tv_sec * 1000 + g_dtv.tv_usec / 1000);
 }
 
-void	*philo(void *number)
+void	*philo(void *tmp)
 {
-	printf("%s Philosopher is ready\n", number);
-	usleep(100);
+	t_param *all = tmp;
+	int			num;
+
+	num = all->num;
+	printf("Philosopher %i is ready\n", num);
+	// usleep(100);
 	while (1)
 	{
-		// printf("Day %li:\n", timer);
-		printf("day %li: ", all.timer);
-		printf("Philosopher %s starts thinking\n", number);
-		// while (1)
-		// 	;
-		usleep(100);
-		printf("day %li: ", all.timer);
-		printf("Philosopher %s finished thinking\n", number);
+		// printf("%li %i has taken a fork", );
 
-		printf("day %li: ", all.timer);
-		printf("Philosopher %s starts eating\n", number);
-		usleep(all.time_to_eat);
-		// usleep(1000000);
-		printf("day %li: ", all.timer);
-		printf("Philosopher %s finished eating\n", number);
+		// printf("%li %i is eating", );
+		// usleep(all->time_to_eat);
 
-		printf("day %li: ", all.timer);
-		printf("Philosopher %s starts sleeping\n", number);
-		usleep(all.time_to_sleep);
-		// usleep(1000000);
-		printf("day %li: ", all.timer);
-		printf("Philosopher %s finished sleeping\n", number);
+		// printf("%li %i is sleeping", );
+		// usleep(all.time_to_sleep);
 
-		if (all.timer >= all.time_to_die)
-		{
-			printf("day %li: ", all.timer);
-			printf("Philosopher %s died\n__--Game over--__\n", number);
-			exit(1);
-		}
-		all.timer++;
+		// printf("%li %i is thinking", );
+
+		// printf("%li %i is died", );
+		break ;
 	}
+	printf("Philosopher %i is died\n", num);
 	return (NULL);
 }
 
@@ -122,6 +84,8 @@ int		main(int argc, char **argv)
 {
 	int		arg;
 	int		len;
+	int		num;
+	t_param	all;
 	//--------check_param_number---------
 	if (argc < 5 || argc > 6)
 	{
@@ -181,14 +145,16 @@ int		main(int argc, char **argv)
 	// pthread_join(g_t1, NULL);
 	// pthread_join(g_t2, NULL);
 	//--------philo-------------
-	char	*str[2] = {"1", "2"};
-	all.timer = 1;
+	time_start();
+	all.num = 0;
+	while (++all.num <= all.number_of_philosophers)
+	{
+		pthread_create(&g_p, NULL, philo, (void *)&all);
+		usleep(1);
+	}
 
-	pthread_create(&g_p1, NULL, philo, (void *)str[0]);
-	pthread_create(&g_p2, NULL, philo, (void *)str[1]);
+	pthread_join(g_p, NULL);
 
-	pthread_join(g_p1, NULL);
-	pthread_join(g_p2, NULL);
 	write(1, "Exit\n", 5);
 	return (0);
 }
