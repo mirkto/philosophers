@@ -29,34 +29,43 @@ typedef struct	s_param
 	int			num;
 }				t_param;
 
-// pthread_t		g_t1, g_t2;
 pthread_t		g_p;
 pthread_mutex_t	g_mutex;
-struct timeval	g_tv1, g_tv2, g_dtv;
-struct timezone	g_tz;
 
-void	time_start()
+//-----------------------------
+// isdigit
+// atoi
+int		ft_strlen(char *str)
 {
-	gettimeofday(&g_tv1, &g_tz);
+	int		i;
+
+	i = 0;
+	while (str[i])
+		i++;
+	return (i);
+}
+//-----------------------------
+long	time_start()
+{
+	struct timeval	tv;
+	struct timezone	tz;
+
+	gettimeofday(&tv, &tz);
+	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
 
-long	time_stop()
+long	time_now(long start_time)
 {
-	gettimeofday(&g_tv2, &g_tz);
-	g_dtv.tv_sec = g_tv2.tv_sec - g_tv1.tv_sec;
-	g_dtv.tv_usec = g_tv2.tv_usec - g_tv1.tv_usec;
-	// if(g_dtv.tv_usec < 0)
-	// {
-	// 	g_dtv.tv_sec--;
-	// 	g_dtv.tv_usec += 1000000;
-	// }
-	return (g_dtv.tv_sec * 1000 + g_dtv.tv_usec / 1000);
+	long	time_end;
+
+	time_end = time_start();
+	return (start_time - time_end);
 }
 
 void	*philo(void *tmp)
 {
 	t_param *all = tmp;
-	int			num;
+	int		num;
 
 	num = all->num;
 	printf("Philosopher %i is ready\n", num);
@@ -80,30 +89,18 @@ void	*philo(void *tmp)
 	return (NULL);
 }
 
-int		main(int argc, char **argv)
+int		check_valid_input(int argc, char **argv)
 {
 	int		arg;
 	int		len;
-	int		num;
-	t_param	all;
-	//--------check_param_number---------
+	int		flag;
+
 	if (argc < 5 || argc > 6)
 	{
-		write(1, "four or five argument only!\n", 28);
+		printf("Four or five argument only!\n");
 		return (1);
 	}
-	//-----print_input_args-----
-	// arg = 0;
-	// while (argv[arg] != NULL)
-	// {
-	// 	len = 0;
-	// 	while (argv[arg][len] != '\0')
-	// 		len++;
-	// 	write(1, argv[arg], len);
-	// 	write(1, "\n", 1);
-	// 	arg++;
-	// }
-	//--------check_param_valid---------
+	flag = 0;
 	arg = 0;
 	while (++arg < argc)
 	{
@@ -112,49 +109,61 @@ int		main(int argc, char **argv)
 			if (isdigit(argv[arg][len]) == 0)
 			{
 				printf("Not valid argument %i\n", arg);
+				flag = 1;
 				break ;
 			}
 	}
-	//------inits_param------
-	all.number_of_philosophers = atoi(argv[1]);
-	all.time_to_die = atoi(argv[2]);
-	all.time_to_eat = atoi(argv[3]);
-	all.time_to_sleep = atoi(argv[4]);
+	if (flag == 1)
+		return (1);
+	return (0);
+}
+
+int		parser(t_param *all, int argc, char **argv)
+{
+	all->number_of_philosophers = atoi(argv[1]);
+	all->time_to_die = atoi(argv[2]);
+	all->time_to_eat = atoi(argv[3]);
+	all->time_to_sleep = atoi(argv[4]);
 	if (argc == 6)
-		all.number_of_times_each_philosopher_must_eat = atoi(argv[5]);
+		all->number_of_times_each_philosopher_must_eat = atoi(argv[5]);
 	else
-		all.number_of_times_each_philosopher_must_eat = -1;
-	//-----param_print-----
-	// printf("%i\n", all.number_of_philosophers);
-	// printf("%i\n", all.time_to_die);
-	// printf("%i\n", all.time_to_eat);
-	// printf("%i\n", all.time_to_sleep);
-	// printf("%i\n", all.number_of_times_each_philosopher_must_eat);
-	//-----testing_str-------
-	// char	*str1 = "1_1_1_1_1_\n";
-	// char	*str2 = "_2_2_2_2_2\n";
-	// //print((void *)str1);
-	// //print((void *)str2);
-	// pthread_mutex_init(&g_mutex, NULL);
-	// // pthread_mutex_lock(&mutex);
-	// // pthread_mutex_unlock(&mutex);
-	// pthread_create(&g_t1, NULL, print1, (void *)str1);
-	// usleep(1);
-	// pthread_create(&g_t2, NULL, print2, (void *)str2);
-	// // usleep(1000000);
-	// pthread_join(g_t1, NULL);
-	// pthread_join(g_t2, NULL);
-	//--------philo-------------
-	time_start();
-	all.num = 0;
-	while (++all.num <= all.number_of_philosophers)
+		all->number_of_times_each_philosopher_must_eat = -1;
+	if (all->number_of_philosophers == 1)
 	{
-		pthread_create(&g_p, NULL, philo, (void *)&all);
-		usleep(1);
+		printf("000 1 has taken a fork\n");
+		printf("%li 1 dead\n", all->time_to_die);
+		return (1);
 	}
+	return (0);
+}
 
-	pthread_join(g_p, NULL);
+void	print_param(t_param *all)
+{
+	printf("%li\n", all->number_of_philosophers);
+	printf("%li\n", all->time_to_die);
+	printf("%li\n", all->time_to_eat);
+	printf("%li\n", all->time_to_sleep);
+	printf("%li\n", all->number_of_times_each_philosopher_must_eat);
+}
 
+int		main(int argc, char **argv)
+{
+	t_param	all;
+
+	if (check_valid_input(argc, argv))
+		return (1);
+	if (parser(&all, argc, argv))
+		return (0);
+	print_param(&all);
+	//--------philo-------------
+	// time_start();
+	// all.num = 0;
+	// while (++all.num <= all.number_of_philosophers)
+	// {
+	// 	pthread_create(&g_p, NULL, philo, (void *)&all);
+	// 	usleep(1);
+	// }
+	// pthread_join(g_p, NULL);
 	write(1, "Exit\n", 5);
 	return (0);
 }
