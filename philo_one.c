@@ -21,17 +21,18 @@
 
 typedef struct	s_param
 {
-	long		number_of_philosophers;
-	long		time_to_die;
-	long		time_to_eat;
-	long		time_to_sleep;
-	long		number_of_times_each_philosopher_must_eat;
-	long		timer;
-	int			num;
-	int			*status;
+	long			number_of_philosophers;
+	long			time_to_die;
+	long			time_to_eat;
+	long			time_to_sleep;
+	long			number_of_times_each_philosopher_must_eat;
+	long			timer;
+	int				num;
+	int				*status;
+	pthread_t		p_exit;
+	int				exit_status;
+	pthread_mutex_t	mutex_es;
 }				t_param;
-
-pthread_mutex_t	g_mutex;
 
 //-----------------------------
 // isdigit
@@ -63,25 +64,28 @@ long	time_now(long start_time)
 	return (time_end - start_time);
 }
 
-long	stab_timer(long *timer, long time)
+long	stab_timer(t_param *all, long time)//long *start, long *now, long time)
 {
-	long		save;
-	long		now;
-	long		need;
-	
-	save = time_now(*timer);
-	need = save + (time / 1000);
-	if (time != 0)
-		usleep(time);
-	now = time_now(*timer);
-	if (need != now)
-		timer += now - need;
+	long	now;
 
-	printf("|%li|\n", save);
-	printf("|%li|\n", now);
-	printf("|%li|\n", need);
+	usleep(time);
+	now = time_now(all->timer);
 
-	return (need);
+	// *now = time_now(*start);
+	// *now -= *now % 10;
+
+	// printf("|%li|\n", *start);
+	// printf("|%li|\n", *now % 10);
+
+	return (now);
+}
+
+void	check_exit_status_and_print(t_param *all, long time, int num, char *str)
+{
+	pthread_mutex_lock(&all->mutex_es);
+	if (all->exit_status == 0)
+		printf("%li %i %s", time, num, str);
+	pthread_mutex_unlock(&all->mutex_es);
 }
 
 void	*philo(void *tmp)
@@ -89,30 +93,42 @@ void	*philo(void *tmp)
 	t_param *all = tmp;
 	int		philo_num;
 	long	timer;
+	// long	start_time;
+	// long	now_time;
 
 	philo_num = all->num++;
 	printf("Philosopher %i is ready\n", philo_num);
-	timer = time_start();
-	printf("%i\n", all->status[philo_num - 1]);
-	while (all->status[philo_num - 1] == 0)
+	// now_time = 0;
+	// start_time = time_start();
+	timer = -1;
+	while (all->exit_status == 0)
 	{
-		printf("%li %i has taken a fork\n", stab_timer(&timer, 0), philo_num);
+		// stab_timer(&start_time, &now_time, 0);
+		// check_exit_status_and_print(all, now_time, philo_num, "taken a fork\n");
+		check_exit_status_and_print(all, stab_timer(all, 0), philo_num, "taken a fork\n");
 
-		printf("%li %i is eating\n", stab_timer(&timer, all->time_to_eat), philo_num);
-		// usleep(all->time_to_eat);
-		// stab_timer(all, all->time_to_eat);
+		// stab_timer(&start_time, &now_time, all->time_to_eat);
+		// check_exit_status_and_print(all, now_time, philo_num, "is eating\n");
+		check_exit_status_and_print(all, stab_timer(all, all->time_to_eat), philo_num, "is eating\n");
 
-		printf("%li %i is sleeping\n", stab_timer(&timer, all->time_to_sleep), philo_num);
-		// usleep(all->time_to_sleep);
-		// stab_timer(all, all->time_to_sleep);
+		// stab_timer(&start_time, &now_time, all->time_to_sleep);
+		// check_exit_status_and_print(all, now_time, philo_num, "is sleeping\n");
+		check_exit_status_and_print(all, stab_timer(all, all->time_to_sleep), philo_num, "is sleeping\n");
 
-		printf("%li %i is thinking\n", stab_timer(&timer, 0), philo_num);
+		// stab_timer(&start_time, &now_time, 0);
+		// check_exit_status_and_print(all, now_time, philo_num, "is thinking\n");
+		check_exit_status_and_print(all, stab_timer(all, 0), philo_num, "is thinking\n");
 
-		// printf("%li %i is died\n", time_now(all->timer), philo_num);
-		all->status[philo_num - 1] = 1;
-		// all->timer = stab_timer(&timer, 0);
+		pthread_mutex_lock(&all->mutex_es);
+		if (all->exit_status == 0)
+		{
+			all->status[philo_num - 1] = 1;
+			// all->timer = stab_timer(&start_time, &now_time, 0);
+			all->exit_status = 1;
+		}
+		pthread_mutex_unlock(&all->mutex_es);
+		// pthread_join(all->p_exit, NULL);
 	}
-	// printf("Philosopher %i is died\n", philo_num);
 	return (NULL);
 }
 
@@ -174,35 +190,74 @@ void	print_param(t_param *all)
 
 void	inits(t_param *all)
 {
-	int			status[all->number_of_philosophers];
 	int			i;
 
+	all->status = (int *)malloc(sizeof(int) * all->number_of_philosophers);
 	i = 0;
 	while (i < all->number_of_philosophers)
 	{
-		status[i] = 0; 
+		all->status[i] = 0; 
 		i++;
 	}
-	all->status = status;
-	// i = -1;
-	// while (++i < all->number_of_philosophers)
-	// 	printf("%i\n", all->status[i]);
-	pthread_mutex_init(&g_mutex, NULL);
+	pthread_mutex_init(&all->mutex_es, NULL);
 	all->num = 1;
 	all->timer = time_start();
+	all->exit_status = 0;
 }
 
 void	init_philo(t_param *all)
 {
-	pthread_t	p[all->number_of_philosophers];
+	// pthread_t	p[all->number_of_philosophers];
+	pthread_t	p;
 	int			i;
 
 	i = 0;
 	while (i < all->number_of_philosophers)
 	{
-		pthread_create(&p[i], NULL, philo, (void *)all);
-		pthread_detach(p[i]);
+		// pthread_create(&p[i], NULL, philo, (void *)all);
+		// pthread_detach(p[i]);
+		pthread_create(&p, NULL, philo, (void *)all);
+		pthread_detach(p);
+		usleep(10);
 		i++;
+	}
+}
+
+// void	init_fork(t_param *all)
+// {
+// 	int			i;
+
+// 	all->mutex = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * all->number_of_philosophers);
+// 	all->forks = (int *)malloc(sizeof(int) * all->number_of_philosophers);
+// 	i = 0;
+// 	while (i < all->number_of_philosophers)
+// 	{
+// 		pthread_mutex_init(&all->mutex[i], NULL);
+// 		all->forks[i] = 0;
+// 		i++;
+// 	}
+// }
+
+void	*p_exit(void *tmp)
+{
+	t_param	*all = tmp;
+	int		i;
+
+	while (1)
+	{
+		// usleep(10000);
+		i = 0;
+		while (i < all->number_of_philosophers)
+		{
+			if (all->status[i] == 1)
+			{
+				// printf("%li %i is died\n", all->timer, i + 1);
+				printf("%li %i is died\n", stab_timer(all, 0), i + 1);
+				write(1, "Exit\n", 5);
+				return (0);
+			}
+			i++;
+		}
 	}
 }
 
@@ -218,27 +273,14 @@ int		main(int argc, char **argv)
 	print_param(&all);//--print from all
 	inits(&all);
 	init_philo(&all);
+	// init_fork(&all);
 	//-----wait_philo----------
 	// i = -1;
 	// while (++i < all.number_of_philosophers)
 	// 	pthread_join(p[i], NULL);
 	//------while_of_death------
-	while (1)
-	{
-		usleep(10000);
-		i = 0;
-		while (all.status[i])
-		{
-			if (all.status[i] == 1)
-			{
-				printf("%li %i is died\n", all.timer, i + 1);
-				write(1, "Exit\n", 5);
-				return (0);
-			}
-			i++;
-		}
-
-	}
-	write(1, "BOOM!\n", 5);
+	pthread_create(&all.p_exit, NULL, p_exit, (void *)&all);
+	pthread_join(all.p_exit, NULL);
+	write(1, "BOOM!\n", 6);
 	return (0);
 }
