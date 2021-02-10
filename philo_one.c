@@ -26,12 +26,13 @@ typedef struct	s_param
 	long			time_to_eat;
 	long			time_to_sleep;
 	long			number_of_times_each_philosopher_must_eat;
-	long			timer;
+	long			time_start;
 	int				num;
-	int				*status;
+	int				*philo_life_status;
 	pthread_t		p_exit;
 	int				exit_status;
 	pthread_mutex_t	mutex_es;
+	pthread_mutex_t	*mutex;
 }				t_param;
 
 //-----------------------------
@@ -47,7 +48,7 @@ int		ft_strlen(char *str)
 	return (i);
 }
 //-----------------------------
-long	time_start()
+long	time_now()
 {
 	struct timeval	tv;
 	struct timezone	tz;
@@ -56,31 +57,26 @@ long	time_start()
 	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
 
-long	time_now(long start_time)
+long	time_passed(long start_time)
 {
 	long	time_end;
 
-	time_end = time_start();
+	time_end = time_now();
 	return (time_end - start_time);
 }
 
-long	stab_timer(t_param *all, long time)//long *start, long *now, long time)
+long	sleep_and_time(t_param *all, long time)
 {
 	long	now;
 
 	usleep(time);
-	now = time_now(all->timer);
-
-	// *now = time_now(*start);
-	// *now -= *now % 10;
-
-	// printf("|%li|\n", *start);
-	// printf("|%li|\n", *now % 10);
-
+	now = time_passed(all->time_start);
+	// printf("|%li|\n", now);
+	// printf("|%li|\n", now % 10);
 	return (now);
 }
 
-void	check_exit_status_and_print(t_param *all, long time, int num, char *str)
+void	check_exit_status_and_print(t_param *all, int num, long time, char *str)
 {
 	pthread_mutex_lock(&all->mutex_es);
 	if (all->exit_status == 0)
@@ -92,38 +88,45 @@ void	*philo(void *tmp)
 {
 	t_param *all = tmp;
 	int		philo_num;
-	long	timer;
-	// long	start_time;
-	// long	now_time;
+	long	time;
+	long	time_after_eat;
+	pthread_mutex_t	*mutex_left_fork;
+	pthread_mutex_t	*mutex_right_fork;
 
+	time_after_eat = -1;
 	philo_num = all->num++;
-	printf("Philosopher %i is ready\n", philo_num);
-	// now_time = 0;
-	// start_time = time_start();
-	timer = -1;
+	// printf("Philosopher %i is ready\n", philo_num);//---
+	mutex_left_fork = &all->mutex[philo_num - 1];
+	mutex_right_fork = &all->mutex[philo_num % all->number_of_philosophers];
 	while (all->exit_status == 0)
 	{
-		// stab_timer(&start_time, &now_time, 0);
-		// check_exit_status_and_print(all, now_time, philo_num, "taken a fork\n");
-		check_exit_status_and_print(all, stab_timer(all, 0), philo_num, "taken a fork\n");
+		pthread_mutex_lock(mutex_left_fork);
+		time = sleep_and_time(all, 0);
+		check_exit_status_and_print(all, philo_num, time, "taken a fork\n");
+		pthread_mutex_lock(mutex_right_fork);
+		time = sleep_and_time(all, 0);
+		check_exit_status_and_print(all, philo_num, time, "taken a fork\n");
 
-		// stab_timer(&start_time, &now_time, all->time_to_eat);
-		// check_exit_status_and_print(all, now_time, philo_num, "is eating\n");
-		check_exit_status_and_print(all, stab_timer(all, all->time_to_eat), philo_num, "is eating\n");
+		time = sleep_and_time(all, all->time_to_eat);
+		check_exit_status_and_print(all, philo_num, time, "is eating\n");
+		pthread_mutex_unlock(mutex_left_fork);
+		pthread_mutex_unlock(mutex_right_fork);
 
-		// stab_timer(&start_time, &now_time, all->time_to_sleep);
-		// check_exit_status_and_print(all, now_time, philo_num, "is sleeping\n");
-		check_exit_status_and_print(all, stab_timer(all, all->time_to_sleep), philo_num, "is sleeping\n");
+		time = sleep_and_time(all, all->time_to_sleep);
+		check_exit_status_and_print(all, philo_num, time, "is sleeping\n");
 
-		// stab_timer(&start_time, &now_time, 0);
-		// check_exit_status_and_print(all, now_time, philo_num, "is thinking\n");
-		check_exit_status_and_print(all, stab_timer(all, 0), philo_num, "is thinking\n");
+		time = sleep_and_time(all, 0);
+		check_exit_status_and_print(all, philo_num, time, "is thinking\n");
+
+		while (1)
+		{
+			all->time_to_die
+		}
 
 		pthread_mutex_lock(&all->mutex_es);
 		if (all->exit_status == 0)
 		{
-			all->status[philo_num - 1] = 1;
-			// all->timer = stab_timer(&start_time, &now_time, 0);
+			all->philo_life_status[philo_num - 1] = 1;
 			all->exit_status = 1;
 		}
 		pthread_mutex_unlock(&all->mutex_es);
@@ -179,80 +182,82 @@ int		parser(t_param *all, int argc, char **argv)
 	return (0);
 }
 
-void	print_param(t_param *all)
-{
-	printf("%li\n", all->number_of_philosophers);
-	printf("%li\n", all->time_to_die);
-	printf("%li\n", all->time_to_eat);
-	printf("%li\n", all->time_to_sleep);
-	printf("%li\n", all->number_of_times_each_philosopher_must_eat);
-}
+// void	print_param(t_param *all)
+// {
+// 	printf("%li\n", all->number_of_philosophers);
+// 	printf("%li\n", all->time_to_die);
+// 	printf("%li\n", all->time_to_eat);
+// 	printf("%li\n", all->time_to_sleep);
+// 	printf("%li\n", all->number_of_times_each_philosopher_must_eat);
+// }
 
 void	inits(t_param *all)
 {
 	int			i;
 
-	all->status = (int *)malloc(sizeof(int) * all->number_of_philosophers);
-	i = 0;
-	while (i < all->number_of_philosophers)
-	{
-		all->status[i] = 0; 
-		i++;
-	}
+	all->philo_life_status = (int *)malloc(sizeof(int) * all->number_of_philosophers);
+	i = -1;
+	while (++i < all->number_of_philosophers)
+		all->philo_life_status[i] = 0; 
 	pthread_mutex_init(&all->mutex_es, NULL);
 	all->num = 1;
-	all->timer = time_start();
+	all->time_start = time_now();
 	all->exit_status = 0;
 }
 
-void	init_philo(t_param *all)
+int	init_philo(t_param *all)
 {
-	// pthread_t	p[all->number_of_philosophers];
-	pthread_t	p;
+	pthread_t	p[all->number_of_philosophers];
+	// pthread_t	p;
 	int			i;
 
 	i = 0;
 	while (i < all->number_of_philosophers)
 	{
-		// pthread_create(&p[i], NULL, philo, (void *)all);
-		// pthread_detach(p[i]);
-		pthread_create(&p, NULL, philo, (void *)all);
-		pthread_detach(p);
-		usleep(10);
+		// if (pthread_create(&p, NULL, philo, (void *)all) == 0)
+		// 	pthread_detach(p);
+		// else
+		if (pthread_create(&p[i], NULL, philo, (void *)all) != 0)
+		{
+			printf("---|Alart|--- %d philo is not born! ---|Alart|---", i + 1);
+			return (1);
+		}
+		usleep(50);//--time after born philo
+		i++;
+	}
+	return (0);
+}
+
+void	init_fork(t_param *all)
+{
+	int			i;
+
+	all->mutex = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * all->number_of_philosophers);
+	i = 0;
+	while (i < all->number_of_philosophers)
+	{
+		pthread_mutex_init(&all->mutex[i], NULL);
 		i++;
 	}
 }
-
-// void	init_fork(t_param *all)
-// {
-// 	int			i;
-
-// 	all->mutex = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * all->number_of_philosophers);
-// 	all->forks = (int *)malloc(sizeof(int) * all->number_of_philosophers);
-// 	i = 0;
-// 	while (i < all->number_of_philosophers)
-// 	{
-// 		pthread_mutex_init(&all->mutex[i], NULL);
-// 		all->forks[i] = 0;
-// 		i++;
-// 	}
-// }
 
 void	*p_exit(void *tmp)
 {
 	t_param	*all = tmp;
 	int		i;
+	long	time;
 
 	while (1)
 	{
-		// usleep(10000);
+		// time = sleep_and_time(all, 10000);
+		usleep(5000);
+		time = time_passed(all->time_start);
 		i = 0;
 		while (i < all->number_of_philosophers)
 		{
-			if (all->status[i] == 1)
+			if (all->philo_life_status[i] == 1)
 			{
-				// printf("%li %i is died\n", all->timer, i + 1);
-				printf("%li %i is died\n", stab_timer(all, 0), i + 1);
+				printf("%li %i is died\n", time, i + 1);
 				write(1, "Exit\n", 5);
 				return (0);
 			}
@@ -270,10 +275,10 @@ int		main(int argc, char **argv)
 		return (1);
 	if (parser(&all, argc, argv))
 		return (0);
-	print_param(&all);//--print from all
+	// print_param(&all);//--print from all
 	inits(&all);
+	init_fork(&all);
 	init_philo(&all);
-	// init_fork(&all);
 	//-----wait_philo----------
 	// i = -1;
 	// while (++i < all.number_of_philosophers)
