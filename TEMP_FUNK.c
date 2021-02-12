@@ -28,11 +28,11 @@ pthread_mutex_destroy - закрытие мьютекса
 pthread_mutex_lock - закрыть мьютекс
 pthread_mutex_unlock - открыть мьютекс
 
-колличество философов и вилок - number_of_philosophers;
+колличество философов и вилок - number_of_philo;
 время смерти, если столько без еды - time_to_die;
 время на еду - time_to_eat;
 время на сон - time_to_sleep;
-сколько надо поесть всем - number_of_times_each_philosopher_must_eat;
+сколько надо поесть всем - number_of_times_each_philo_must_eat;
 
 ft_putendl("---");
 
@@ -110,11 +110,11 @@ void			fill_nbr(size_t nbr, char **ptr)
 	// print_param(&all);//--print from all
 // void	print_param(t_param *all)
 // {
-// 	printf("%li\n", all->number_of_philosophers);
+// 	printf("%li\n", all->number_of_philo);
 // 	printf("%li\n", all->time_to_die);
 // 	printf("%li\n", all->time_to_eat);
 // 	printf("%li\n", all->time_to_sleep);
-// 	printf("%li\n", all->number_of_times_each_philosopher_must_eat);
+// 	printf("%li\n", all->number_of_times_each_philo_must_eat);
 // }
 
 
@@ -137,12 +137,12 @@ void			fill_nbr(size_t nbr, char **ptr)
 
 int	init_philo(t_param *all)
 {
-	pthread_t	p[all->number_of_philosophers];
+	pthread_t	p[all->number_of_philo];
 	// pthread_t	p;
 	int			i;
 
 	i = 0;
-	while (i < all->number_of_philosophers)
+	while (i < all->number_of_philo)
 	{
 		// if (pthread_create(&p, NULL, philo, (void *)all) == 0)
 		// 	pthread_detach(p);
@@ -173,8 +173,8 @@ int	init_philo(t_param *all)
 // 	time_eat = -1;
 // 	philo_num = all->num++;
 // 	// printf("Philosopher %i is ready\n", philo_num);//---
-// 	mutex_left_fork = &all->mutex[philo_num - 1];
-// 	mutex_right_fork = &all->mutex[philo_num % all->number_of_philosophers];
+// 	mutex_left_fork = &all->fork_mutex[philo_num - 1];
+// 	mutex_right_fork = &all->fork_mutex[philo_num % all->number_of_philo];
 // 	while (all->exit_status == 0)
 // 	{
 // 		pthread_mutex_lock(mutex_left_fork);
@@ -204,14 +204,75 @@ int	init_philo(t_param *all)
 // 		// 	all->time_to_die;
 // 		// }
 
-// 		pthread_mutex_lock(&all->mutex_es);
+// 		pthread_mutex_lock(&all->print_mutex);
 // 		if (all->exit_status == 0)
 // 		{
 // 			all->philo_life_status[philo_num - 1] = 1;
 // 			all->exit_status = 1;
 // 		}
-// 		pthread_mutex_unlock(&all->mutex_es);
+// 		pthread_mutex_unlock(&all->print_mutex);
 // 		// pthread_join(all->p_exit, NULL);
 // 	}
 // 	return (NULL);
+// }
+
+
+// //-----------------------------
+// long	time_now()
+// {
+// 	struct timeval	tv;
+// 	struct timezone	tz;
+
+// 	gettimeofday(&tv, &tz);
+// 	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
+// }
+
+// long	time_passed(long start_time)
+// {
+// 	return (time_now() - start_time);
+// }
+
+// void	check_exit_status_and_print(t_param *all, int num, long time, char *str)
+// {
+// 	pthread_mutex_lock(&all->print_mutex);
+// 	if (all->exit_status == 0)
+// 		printf("%li %i %s", time, num, str);
+// 	pthread_mutex_unlock(&all->print_mutex);
+// }
+
+// void	monie(long timer)
+// {
+// 	long start_time;
+
+// 	start_time = time_now();
+// 	usleep(timer - 7000);
+// 	printf("%ld\n", time_now() - start_time);
+// 	while(time_now() - start_time < timer)
+// 	{
+// 		usleep(100);
+// 	}
+// 	printf("pozral\n");
+// }
+
+// void	*philo(void *tmp)
+// {
+// 	t_param *all;
+
+// 	all = tmp;
+// 	//all->
+// }
+
+// int	init_philo(t_param *all)
+// {
+// 	pthread_t	p[all->number_of_philo];
+// 	int			i;
+
+// 	i = 0;
+// 	while (i < all->number_of_philo)
+// 	{
+// 		pthread_create(&p[i], NULL, philo, (void *)all) != 0;
+// 		usleep(50);
+// 		i++;
+// 	}
+// 	return (0);
 // }
