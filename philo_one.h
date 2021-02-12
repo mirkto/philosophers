@@ -36,7 +36,7 @@ typedef struct		s_philo
 int		check_valid_input(int argc, char **argv);
 int		parser(t_param *all, int argc, char **argv);
 
-int		inits(t_param *all, t_philo *philo);
+int		ft_inits(t_param *all);
 
 int		ft_perror(char *str);
 int		ft_strlen(char *str);

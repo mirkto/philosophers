@@ -276,3 +276,19 @@ int	init_philo(t_param *all)
 // 	}
 // 	return (0);
 // }
+
+
+
+
+
+	// int			i;
+
+	// if (!(all->philo_life_status = malloc(sizeof(int) * all->number_of_philo)))
+	// 	return (ft_perror("Error: malloc: inits philo_life_status"));
+	// i = 0;
+	// while (++i < all->number_of_philo)
+	// {
+	// 	all->philo_life_status[i] = 0;
+	// 	i++;
+	// }
+	// ---

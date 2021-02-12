@@ -28,22 +28,8 @@ int		init_fork(t_param *all)
 	return (0);
 }
 
-int		inits(t_param *all, t_philo *philo)
+int		ft_inits(t_param *all)
 {
-	// int			i;
-
-	// if (!(all->philo_life_status = malloc(sizeof(int) * all->number_of_philo)))
-	// 	return (ft_perror("Error: malloc: inits philo_life_status"));
-	// i = 0;
-	// while (++i < all->number_of_philo)
-	// {
-	// 	all->philo_life_status[i] = 0;
-	// 	i++;
-	// }
-	// ---
-	// if (!(philo = malloc(sizeof(t_philo) * all->number_of_philo)))
-	// 	return (ft_perror("Error: malloc: inits philo structs"));
-
 	if (!(all->philo_threads = malloc(sizeof(pthread_t) * all->number_of_philo)))
 		return (ft_perror("Error: malloc: inits philo_threads"));
 

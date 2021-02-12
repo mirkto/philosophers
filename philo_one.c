@@ -81,8 +81,9 @@ int		main(int argc, char **argv)
 		return (1);
 	if (parser(&all, argc, argv))
 		return (1);
-	philo = malloc(sizeof(t_philo) * all.number_of_philo);
-	if (inits(&all, philo))
+	if (!(philo = malloc(sizeof(t_philo) * all.number_of_philo)))
+		return (ft_perror("Error: malloc: inits philo structs"));
+	if (ft_inits(&all))
 		return (1);
 
 	create_live(philo, all);
