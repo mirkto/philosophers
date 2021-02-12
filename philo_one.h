@@ -37,8 +37,10 @@ int		check_valid_input(int argc, char **argv);
 int		parser(t_param *all, int argc, char **argv);
 
 int		ft_inits(t_param *all);
+void	create_live(t_philo *philo, t_param all);
 
 int		ft_perror(char *str);
 int		ft_strlen(char *str);
+int		ft_smatoi(char *str);
 
 void	*p_exit(void *tmp);

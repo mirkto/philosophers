@@ -12,8 +12,7 @@
 
 #include "philo_one.h"
 
-//-----------------------------
-// atoi
+
 int		ft_perror(char *str)
 {
 	printf("%s\n", str);
@@ -28,4 +27,16 @@ int		ft_strlen(char *str)
 	while (str[i])
 		i++;
 	return (i);
+}
+
+int		ft_smatoi(char *str)
+{
+	int		i;
+	int		number;
+
+	number = 0;
+	i = -1;
+	while(str[++i] != '\0')
+		number = 10 * number + (str[i] - '0');
+	return (number);
 }

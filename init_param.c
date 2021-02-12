@@ -12,19 +12,32 @@
 
 #include "philo_one.h"
 
+void	create_live(t_philo *philo, t_param all)
+{
+	int i;
+
+	i = -1;
+	while(++i < all.number_of_philo)
+	{
+		philo[i].philo_name = i + 1;
+		philo[i].time_to_die = all.time_to_die;
+		philo[i].time_to_eat = all.time_to_eat;
+		philo[i].time_to_sleep = all.time_to_sleep;
+		philo[i].left = &all.fork_mutex[i];
+		philo[i].right = &all.fork_mutex[(i + 1) % all.number_of_philo];
+	}
+}
+
 int		init_fork(t_param *all)
 {
 	int			i;
 
 	if (!(all->fork_mutex = malloc(sizeof(pthread_mutex_t) * all->number_of_philo)))
 		return (ft_perror("Error: malloc: inits fork_mutex"));
-	i = 0;
-	while (i < all->number_of_philo)
-	{
+	i = -1;
+	while (++i < all->number_of_philo)
 		if (pthread_mutex_init(&all->fork_mutex[i], NULL))
 			return (ft_perror("Error: system is not create fork_mutex"));
-		i++;
-	}
 	return (0);
 }
 
@@ -32,10 +45,8 @@ int		ft_inits(t_param *all)
 {
 	if (!(all->philo_threads = malloc(sizeof(pthread_t) * all->number_of_philo)))
 		return (ft_perror("Error: malloc: inits philo_threads"));
-
 	if (pthread_mutex_init(&all->print_mutex, NULL) != 0)
 		return (ft_perror("Error: system is not create print_mutex"));
-
 	if (init_fork(all) != 0)
 		return (1);
 	all->exit_status = 0;

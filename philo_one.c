@@ -41,35 +41,18 @@ void	*philo_life(void *tmp)
 	return (0);
 }
 
-void	start_live(t_philo *philo, t_param *all)
+int		start_live(t_philo *philo, t_param *all)
 {
 	int i;
 
-	i = 0;
-	while (i < all->number_of_philo)
+	i = -1;
+	while (++i < all->number_of_philo)
 	{
-		pthread_create(&all->philo_threads[i], NULL, philo_life, &philo[i]);
-		usleep(50);
-		i++;
+	if (pthread_create(&all->philo_threads[i], NULL, philo_life, &philo[i]) != 0)
+		return (ft_perror("Error: system is not create philo_threads"));
+	usleep(50);
 	}
-	
-}
-
-void	create_live(t_philo *philo, t_param all)
-{
-	int i;
-
-	i = 0;
-	while(i < all.number_of_philo)
-	{
-		philo[i].philo_name = i + 1;
-		philo[i].time_to_die = all.time_to_die;
-		philo[i].time_to_eat = all.time_to_eat;
-		philo[i].time_to_sleep = all.time_to_sleep;
-		philo[i].left = &all.fork_mutex[i];
-		philo[i].right = &all.fork_mutex[(i + 1) % all.number_of_philo];
-		i++;
-	}
+	return (0);
 }
 
 int		main(int argc, char **argv)

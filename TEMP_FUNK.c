@@ -107,18 +107,13 @@ void			fill_nbr(size_t nbr, char **ptr)
 	}
 }
 
-	// print_param(&all);//--print from all
-// void	print_param(t_param *all)
-// {
-// 	printf("%li\n", all->number_of_philo);
-// 	printf("%li\n", all->time_to_die);
-// 	printf("%li\n", all->time_to_eat);
-// 	printf("%li\n", all->time_to_sleep);
-// 	printf("%li\n", all->number_of_times_each_philo_must_eat);
-// }
-
-
-
+//---print_parse_param---
+printf("%i\n", all.number_of_philo);
+printf("%i\n", all.time_to_die);
+printf("%i\n", all.time_to_eat);
+printf("%i\n", all.time_to_sleep);
+printf("%i\n", all.number_of_times_each_philo_must_eat);
+//-----------------------
 
 // void	*p_time(void *tmp)
 // {

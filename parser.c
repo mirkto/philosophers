@@ -25,8 +25,8 @@ int		check_valid_input(int argc, char **argv)
 	while (++arg < argc)
 	{
 		len = -1;
-		while (argv[arg][++len] != '\0')
-			if (argv[arg][len] <= '0' && argv[arg][len] >= '9')
+		while (argv[arg][++len] != '\0' || argv[arg][0] == '\0')
+			if (!('0' <= argv[arg][len] && argv[arg][len] <= '9'))
 			{
 				printf("Not valid argument %i\n", arg);
 				flag = 1;
@@ -40,12 +40,12 @@ int		check_valid_input(int argc, char **argv)
 
 int		parser(t_param *all, int argc, char **argv)
 {
-	all->number_of_philo = atoi(argv[1]);
-	all->time_to_die = atoi(argv[2]);
-	all->time_to_eat = atoi(argv[3]);
-	all->time_to_sleep = atoi(argv[4]);
+	all->number_of_philo = ft_smatoi(argv[1]);
+	all->time_to_die = ft_smatoi(argv[2]);
+	all->time_to_eat = ft_smatoi(argv[3]);
+	all->time_to_sleep = ft_smatoi(argv[4]);
 	if (argc == 6)
-		all->number_of_times_each_philo_must_eat = atoi(argv[5]);
+		all->number_of_times_each_philo_must_eat = ft_smatoi(argv[5]);
 	else
 		all->number_of_times_each_philo_must_eat = -1;
 	if (all->number_of_philo < 2 || all->number_of_philo > 200)

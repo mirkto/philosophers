@@ -1,7 +1,7 @@
 NAME = philo_one
 FLAGS = -Wall -Wextra -Werror
 SOURCES = philo_one.c parser.c utils.c init_param.c
-OBJECTS =$(SOURCES:%.c=%.o)
+OBJECTS = $(SOURCES:%.c=%.o)
 HEADER = philo_one.h
 
 all: $(NAME)
