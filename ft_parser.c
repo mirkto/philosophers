@@ -19,7 +19,7 @@ int		check_valid_input(int argc, char **argv)
 	int		flag;
 
 	if (argc < 5 || argc > 6)
-		return (ft_perror("Four or five argument only!"));
+		return (tl_perror("Four or five argument only!"));
 	flag = 0;
 	arg = 0;
 	while (++arg < argc)
@@ -50,7 +50,7 @@ int		ft_smatoi(char *str)
 	return (number);
 }
 
-int		parser(t_param *all, int argc, char **argv)
+int		ft_parser(t_param *all, int argc, char **argv)
 {
 	if (check_valid_input(argc, argv))
 		return (1);
@@ -59,10 +59,10 @@ int		parser(t_param *all, int argc, char **argv)
 	all->time_to_eat = ft_smatoi(argv[3]);
 	all->time_to_sleep = ft_smatoi(argv[4]);
 	if (argc == 6)
-		all->number_of_times_each_philo_must_eat = ft_smatoi(argv[5]);
+		all->number_of_times_each_must_eat = ft_smatoi(argv[5]);
 	else
-		all->number_of_times_each_philo_must_eat = -1;
+		all->number_of_times_each_must_eat = -1;
 	if (all->number_of_philo < 2 || all->number_of_philo > 200)
-		return (ft_perror("Not valid number of philosophers"));
+		return (tl_perror("Not valid number of philosophers"));
 	return (0);
 }

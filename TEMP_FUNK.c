@@ -32,7 +32,7 @@ pthread_mutex_unlock - открыть мьютекс
 время смерти, если столько без еды - time_to_die;
 время на еду - time_to_eat;
 время на сон - time_to_sleep;
-сколько надо поесть всем - number_of_times_each_philo_must_eat;
+сколько надо поесть всем - number_of_times_each_must_eat;
 
 ft_putendl("---");
 
@@ -82,7 +82,7 @@ printf("%i\n", all.number_of_philo);
 printf("%i\n", all.time_to_die);
 printf("%i\n", all.time_to_eat);
 printf("%i\n", all.time_to_sleep);
-printf("%i\n", all.number_of_times_each_philo_must_eat);
+printf("%i\n", all.number_of_times_each_must_eat);
 //-----------------------
 
 // void	*p_time(void *tmp)
@@ -144,25 +144,25 @@ int	init_philo(t_param *all)
 // 	{
 // 		pthread_mutex_lock(mutex_left_fork);
 // 		time = time_passed(all->time_start);
-// 		check_and_print(all, philo_num, time, "taken a fork\n");
+// 		tl_check_and_print(all, philo_num, time, "taken a fork\n");
 // 		pthread_mutex_lock(mutex_right_fork);
 // 		time = time_passed(all->time_start);
-// 		check_and_print(all, philo_num, time, "taken a fork\n");
+// 		tl_check_and_print(all, philo_num, time, "taken a fork\n");
 
 // 		time = time_passed(all->time_start);
-// 		all->philo_life_status[philo_num - 1] = time_now();
-// 		check_and_print(all, philo_num, time, "is eating\n");
+// 		all->philo_life_status[philo_num - 1] = tl_time_now();
+// 		tl_check_and_print(all, philo_num, time, "is eating\n");
 // 		usleep(all->time_to_eat);
 // 		// monie(all->time_to_eat);
 // 		pthread_mutex_unlock(mutex_left_fork);
 // 		pthread_mutex_unlock(mutex_right_fork);
 
 // 		time = time_passed(all->time_start);
-// 		check_and_print(all, philo_num, time, "is sleeping\n");
+// 		tl_check_and_print(all, philo_num, time, "is sleeping\n");
 // 		usleep(all->time_to_sleep);
 
 // 		time = time_passed(all->time_start);
-// 		check_and_print(all, philo_num, time, "is thinking\n");
+// 		tl_check_and_print(all, philo_num, time, "is thinking\n");
 
 // 		// while (1)
 // 		// {
@@ -184,7 +184,7 @@ int	init_philo(t_param *all)
 	// int			i;
 
 	// if (!(all->philo_life_status = malloc(sizeof(int) * all->number_of_philo)))
-	// 	return (ft_perror("Error: malloc: inits philo_life_status"));
+	// 	return (tl_perror("Error: malloc: inits philo_life_status"));
 	// i = 0;
 	// while (++i < all->number_of_philo)
 	// {
@@ -210,9 +210,9 @@ int	init_philo(t_param *all)
 // 		i = 0;
 // 		while (i < all->number_of_philo)
 // 		{
-// 			// printf("---| %li %li |---\n", (time_now() - all->philo_life_status[i]), all->time_to_die);
+// 			// printf("---| %li %li |---\n", (tl_time_now() - all->philo_life_status[i]), all->time_to_die);
 
-// 			// if ((time_now() - all->philo_life_status[i]) > all->time_to_die && all->philo_life_status[i] != 0)
+// 			// if ((tl_time_now() - all->philo_life_status[i]) > all->time_to_die && all->philo_life_status[i] != 0)
 // 			if (all->philo_life_status[i] == 0)
 // 			{
 // 				printf("%li %i is died\n", time, i + 1);

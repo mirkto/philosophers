@@ -12,25 +12,42 @@
 
 #include "philo_one.h"
 
+void	time_work(int timer)
+{
+	int		start_time;
+
+	start_time = tl_time_now();
+	usleep(timer * 1000 - 7000);
+	while (tl_time_now() - start_time < timer)
+		usleep(100);
+}
+
 void	take_fork(t_philo *philo)
 {
 	pthread_mutex_lock(philo->left);
+	tl_check_and_print(philo, "has taken a fork");
 	pthread_mutex_lock(philo->right);
-	check_and_print(philo, "has taken a fork 1");
-	check_and_print(philo, "has taken a fork 2");
-	philo->time_after_start_eat = time_now();
-	check_and_print(philo, "is eating");
+	tl_check_and_print(philo, "has taken a fork");
+	philo->time_after_start_eat = tl_time_now();
+	tl_check_and_print(philo, "is eating");
 	time_work(philo->time_to_eat);
 	pthread_mutex_unlock(philo->left);
 	pthread_mutex_unlock(philo->right);
 }
 
-void	*philo_life(void *tmp)
+void	*ft_philo(void *tmp)
 {
 	t_philo	*philo;
 
 	philo = (t_philo *)tmp;
-	printf("Philo name # %i\n", philo->philo_name);
-	take_fork(philo);
+	while (philo->num_of_each_must_eat != 0)
+	{
+		take_fork(philo);
+		tl_check_and_print(philo, "is sleeping");
+		time_work(philo->time_to_sleep);
+		tl_check_and_print(philo, "is thinking");
+		if (philo->num_of_each_must_eat != -1)
+			philo->num_of_each_must_eat--;
+	}
 	return (0);
 }

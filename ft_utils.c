@@ -12,13 +12,13 @@
 
 #include "philo_one.h"
 
-int		ft_perror(char *str)
+int		tl_perror(char *str)
 {
 	printf("%s\n", str);
 	return (1);
 }
 
-int		time_now(void)
+int		tl_time_now(void)
 {
 	struct timeval	time_val;
 
@@ -30,23 +30,13 @@ int		time_passed(void)
 {
 	int		time;
 
-	time = time_now() - g_time_start;
+	time = tl_time_now() - g_time_start;
 	if (time % 10 == 1)
 		time--;
 	return (time);
 }
 
-void	time_work(int timer)
-{
-	int		start_time;
-
-	start_time = time_now();
-	usleep(timer * 1000 - 7000);
-	while (time_now() - start_time < timer)
-		usleep(100);
-}
-
-void	check_and_print(t_philo *philo, char *str)
+void	tl_check_and_print(t_philo *philo, char *str)
 {
 	pthread_mutex_lock(&g_print_mutex);
 	printf("%i %i %s\n", time_passed(), philo->philo_name, str);

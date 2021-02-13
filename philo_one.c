@@ -16,18 +16,18 @@ int		start_live(t_philo *philo, t_param *all)
 {
 	int		i;
 
-	g_time_start = time_now();
+	g_time_start = tl_time_now();
 	i = -1;
 	while (++i < all->number_of_philo)
 	{
-		if (pthread_create(&all->philo_threads[i], NULL, philo_life, &philo[i]))
-			return (ft_perror("Error: system is not create philo_threads"));
-		usleep(100);
+		if (pthread_create(&all->philo_threads[i], NULL, ft_philo, &philo[i]))
+			return (tl_perror("Error: system is not create philo_threads"));
+		usleep(50);
 	}
 	return (0);
 }
 
-void	ft_wait_philo(t_param *all)
+void	wait_philo(t_param *all)
 {
 	int		i;
 
@@ -41,15 +41,15 @@ int		main(int argc, char **argv)
 	t_param	all;
 	t_philo	*philo;
 
-	if (parser(&all, argc, argv))
+	if (ft_parser(&all, argc, argv))
 		return (1);
 	philo = malloc(sizeof(t_philo) * all.number_of_philo);
 	if (!philo)
-		return (ft_perror("Error: malloc: inits philo structs"));
+		return (tl_perror("Error: malloc: inits philo structs"));
 	if (ft_inits(&all, philo))
 		return (1);
 	start_live(philo, &all);
-	ft_wait_philo(&all);
+	wait_philo(&all);
 	write(1, "BOOM!\n", 6);
 	return (0);
 }

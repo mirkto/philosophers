@@ -10,11 +10,11 @@ HEADER = philo_one.h
 
 all: $(NAME)
 
-$(NAME): $(OBJECTS) $(HEADER)
-	gcc $(FLAGS) $(SOURCES) -o $(NAME)
-
 %.o: %.c $(HEADER)
 	gcc $(FLAGS) -c $< -o $@
+
+$(NAME): $(OBJECTS) $(HEADER)
+	gcc $(FLAGS) $(SOURCES) -o $(NAME)
 
 clean:
 	rm -f $(OBJECTS)
