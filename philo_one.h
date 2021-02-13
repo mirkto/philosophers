@@ -37,7 +37,7 @@ typedef struct	s_philo
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				num_of_each_must_eat;
-	int				time_after_start_eat;
+	int				time_to_start_eat;
 	pthread_mutex_t	*left;
 	pthread_mutex_t	*right;
 }				t_philo;

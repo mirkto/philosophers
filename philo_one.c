@@ -12,6 +12,28 @@
 
 #include "philo_one.h"
 
+int		check_death(t_param *all, t_philo *philo)
+{
+	int		i;
+
+	while (1)
+	{
+		usleep(8000);
+		i = 0;
+		while (i < all->number_of_philo)
+		{
+			if (tl_time_now() - philo[i].time_to_start_eat > all->time_to_die)
+			{
+				tl_check_and_print(&philo[i], "dead");
+				g_exit_status = 1;
+				return (1);
+			}
+			i++;
+		}
+	}
+	return (0);
+}
+
 int		start_live(t_philo *philo, t_param *all)
 {
 	int		i;
@@ -49,6 +71,7 @@ int		main(int argc, char **argv)
 	if (ft_inits(&all, philo))
 		return (1);
 	start_live(philo, &all);
+	check_death(&all, philo);
 	wait_philo(&all);
 	write(1, "BOOM!\n", 6);
 	return (0);

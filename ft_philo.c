@@ -28,7 +28,7 @@ void	take_fork(t_philo *philo)
 	tl_check_and_print(philo, "has taken a fork");
 	pthread_mutex_lock(philo->right);
 	tl_check_and_print(philo, "has taken a fork");
-	philo->time_after_start_eat = tl_time_now();
+	philo->time_to_start_eat = tl_time_now();
 	tl_check_and_print(philo, "is eating");
 	time_work(philo->time_to_eat);
 	pthread_mutex_unlock(philo->left);
@@ -48,6 +48,10 @@ void	*ft_philo(void *tmp)
 		tl_check_and_print(philo, "is thinking");
 		if (philo->num_of_each_must_eat != -1)
 			philo->num_of_each_must_eat--;
+		if (philo->num_of_each_must_eat == 0)
+			g_exit_status = 1;
+		if (g_exit_status == 1)
+			break ;
 	}
 	return (0);
 }

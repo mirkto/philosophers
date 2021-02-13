@@ -39,6 +39,7 @@ int		time_passed(void)
 void	tl_check_and_print(t_philo *philo, char *str)
 {
 	pthread_mutex_lock(&g_print_mutex);
-	printf("%i %i %s\n", time_passed(), philo->philo_name, str);
+	if (g_exit_status == 0)
+		printf("%i %i %s\n", time_passed(), philo->philo_name, str);
 	pthread_mutex_unlock(&g_print_mutex);
 }

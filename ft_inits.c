@@ -26,7 +26,7 @@ void	inits_philo(t_param *all, t_philo *philo)
 		philo[i].num_of_each_must_eat = all->number_of_times_each_must_eat;
 		philo[i].left = &all->fork_mutex[i];
 		philo[i].right = &all->fork_mutex[(i + 1) % all->number_of_philo];
-		philo[i].time_after_start_eat = -1;
+		philo[i].time_to_start_eat = -1;
 	}
 }
 
