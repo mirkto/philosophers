@@ -192,3 +192,44 @@ int	init_philo(t_param *all)
 	// 	i++;
 	// }
 	// ---
+
+
+
+	//----------------------------
+// void	*p_exit(void *tmp)
+// {
+// 	t_param	*all = tmp;
+// 	int		i;
+// 	long	time;
+
+// 	while (1)
+// 	{
+// 		// time = sleep_and_time(all, 10000);
+// 		// usleep(5000);
+// 		// time = time_passed(all->time_start);
+// 		i = 0;
+// 		while (i < all->number_of_philo)
+// 		{
+// 			// printf("---| %li %li |---\n", (time_now() - all->philo_life_status[i]), all->time_to_die);
+
+// 			// if ((time_now() - all->philo_life_status[i]) > all->time_to_die && all->philo_life_status[i] != 0)
+// 			if (all->philo_life_status[i] == 0)
+// 			{
+// 				printf("%li %i is died\n", time, i + 1);
+// 				write(1, "Exit\n", 5);
+// 				return (0);
+// 			}
+// 			i++;
+// 		}
+// 	}
+// }
+
+int		ft_strlen(char *str)
+{
+	int		i;
+
+	i = 0;
+	while (str[i])
+		i++;
+	return (i);
+}

@@ -27,15 +27,10 @@ void	take_fork(t_philo *philo)
 
 void	*philo_life(void *tmp)
 {
-	t_philo *philo;
-	int i;
+	t_philo	*philo;
 
-	i = 1;
 	philo = (t_philo *)tmp;
-	// printf("Philo name # %i\n", philo->philo_name);
-	// while (i)
-	// {
-		take_fork(philo);
-	// }
+	printf("Philo name # %i\n", philo->philo_name);
+	take_fork(philo);
 	return (0);
 }

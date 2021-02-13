@@ -18,22 +18,12 @@ int		ft_perror(char *str)
 	return (1);
 }
 
-// int		ft_strlen(char *str)
-// {
-// 	int		i;
-
-// 	i = 0;
-// 	while (str[i])
-// 		i++;
-// 	return (i);
-// }
-
 int		time_now(void)
 {
 	struct timeval	time_val;
 
 	gettimeofday(&time_val, NULL);
-	return (time_val.tv_sec * 1000 + time_val.tv_usec / 1000);;
+	return (time_val.tv_sec * 1000 + time_val.tv_usec / 1000);
 }
 
 int		time_passed(void)
@@ -43,7 +33,7 @@ int		time_passed(void)
 	time = time_now() - g_time_start;
 	if (time % 10 == 1)
 		time--;
-	return(time);
+	return (time);
 }
 
 void	time_work(int timer)
@@ -52,14 +42,13 @@ void	time_work(int timer)
 
 	start_time = time_now();
 	usleep(timer * 1000 - 7000);
-	while(time_now() - start_time < timer)
+	while (time_now() - start_time < timer)
 		usleep(100);
 }
 
 void	check_and_print(t_philo *philo, char *str)
 {
 	pthread_mutex_lock(&g_print_mutex);
-	// if (all->exit_status == 0)
-		printf("%i %i %s\n", time_passed(), philo->philo_name, str);
+	printf("%i %i %s\n", time_passed(), philo->philo_name, str);
 	pthread_mutex_unlock(&g_print_mutex);
 }

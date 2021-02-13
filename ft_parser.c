@@ -26,7 +26,7 @@ int		check_valid_input(int argc, char **argv)
 	{
 		len = -1;
 		while (argv[arg][++len] != '\0' || argv[arg][0] == '\0')
-			if (!('0' <= argv[arg][len] && argv[arg][len] <= '9'))
+			if (!('0' <= argv[arg][len] && argv[arg][len] <= '9') || len == 4)
 			{
 				printf("Not valid argument %i\n", arg);
 				flag = 1;
@@ -45,13 +45,15 @@ int		ft_smatoi(char *str)
 
 	number = 0;
 	i = -1;
-	while(str[++i] != '\0')
+	while (str[++i] != '\0')
 		number = 10 * number + (str[i] - '0');
 	return (number);
 }
 
 int		parser(t_param *all, int argc, char **argv)
 {
+	if (check_valid_input(argc, argv))
+		return (1);
 	all->number_of_philo = ft_smatoi(argv[1]);
 	all->time_to_die = ft_smatoi(argv[2]);
 	all->time_to_eat = ft_smatoi(argv[3]);
