@@ -77,36 +77,6 @@ main()
 	...
 }
 
-//------------atos----------
-int				ft_atos(char *str, size_t *nb)
-{
-	if (*str == '\0')
-		return (-1);
-	*nb = 0;
-	while (*str && *str >= '0' && *str <= '9')
-		*nb = 10 * *nb + (*str++ - '0');
-	if (*str != '\0')
-		return (-1);
-	return (0);
-}
-//---------fill_nbr---------------
-void			fill_nbr(size_t nbr, char **ptr)
-{
-	char			c;
-	size_t			nnbr;
-	long long int	pow;
-
-	pow = 10;
-	nnbr = nbr;
-	while (nnbr /= 10)
-		pow *= 10;
-	while ((pow /= 10))
-	{
-		c = (nbr / pow) % 10 + '0';
-		*(*ptr)++ = c;
-	}
-}
-
 //---print_parse_param---
 printf("%i\n", all.number_of_philo);
 printf("%i\n", all.time_to_die);
@@ -174,25 +144,25 @@ int	init_philo(t_param *all)
 // 	{
 // 		pthread_mutex_lock(mutex_left_fork);
 // 		time = time_passed(all->time_start);
-// 		check_exit_status_and_print(all, philo_num, time, "taken a fork\n");
+// 		check_and_print(all, philo_num, time, "taken a fork\n");
 // 		pthread_mutex_lock(mutex_right_fork);
 // 		time = time_passed(all->time_start);
-// 		check_exit_status_and_print(all, philo_num, time, "taken a fork\n");
+// 		check_and_print(all, philo_num, time, "taken a fork\n");
 
 // 		time = time_passed(all->time_start);
 // 		all->philo_life_status[philo_num - 1] = time_now();
-// 		check_exit_status_and_print(all, philo_num, time, "is eating\n");
+// 		check_and_print(all, philo_num, time, "is eating\n");
 // 		usleep(all->time_to_eat);
 // 		// monie(all->time_to_eat);
 // 		pthread_mutex_unlock(mutex_left_fork);
 // 		pthread_mutex_unlock(mutex_right_fork);
 
 // 		time = time_passed(all->time_start);
-// 		check_exit_status_and_print(all, philo_num, time, "is sleeping\n");
+// 		check_and_print(all, philo_num, time, "is sleeping\n");
 // 		usleep(all->time_to_sleep);
 
 // 		time = time_passed(all->time_start);
-// 		check_exit_status_and_print(all, philo_num, time, "is thinking\n");
+// 		check_and_print(all, philo_num, time, "is thinking\n");
 
 // 		// while (1)
 // 		// {
@@ -210,71 +180,6 @@ int	init_philo(t_param *all)
 // 	}
 // 	return (NULL);
 // }
-
-
-// //-----------------------------
-// long	time_now()
-// {
-// 	struct timeval	tv;
-// 	struct timezone	tz;
-
-// 	gettimeofday(&tv, &tz);
-// 	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
-// }
-
-// long	time_passed(long start_time)
-// {
-// 	return (time_now() - start_time);
-// }
-
-// void	check_exit_status_and_print(t_param *all, int num, long time, char *str)
-// {
-// 	pthread_mutex_lock(&all->print_mutex);
-// 	if (all->exit_status == 0)
-// 		printf("%li %i %s", time, num, str);
-// 	pthread_mutex_unlock(&all->print_mutex);
-// }
-
-// void	monie(long timer)
-// {
-// 	long start_time;
-
-// 	start_time = time_now();
-// 	usleep(timer - 7000);
-// 	printf("%ld\n", time_now() - start_time);
-// 	while(time_now() - start_time < timer)
-// 	{
-// 		usleep(100);
-// 	}
-// 	printf("pozral\n");
-// }
-
-// void	*philo(void *tmp)
-// {
-// 	t_param *all;
-
-// 	all = tmp;
-// 	//all->
-// }
-
-// int	init_philo(t_param *all)
-// {
-// 	pthread_t	p[all->number_of_philo];
-// 	int			i;
-
-// 	i = 0;
-// 	while (i < all->number_of_philo)
-// 	{
-// 		pthread_create(&p[i], NULL, philo, (void *)all) != 0;
-// 		usleep(50);
-// 		i++;
-// 	}
-// 	return (0);
-// }
-
-
-
-
 
 	// int			i;
 

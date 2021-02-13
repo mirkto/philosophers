@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser.c                                           :+:      :+:    :+:   */
+/*   ft_parser.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ngonzo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/02/12 16:58:17 by ngonzo            #+#    #+#             */
-/*   Updated: 2021/02/12 16:58:19 by ngonzo           ###   ########.fr       */
+/*   Created: 2021/02/13 16:46:59 by ngonzo            #+#    #+#             */
+/*   Updated: 2021/02/13 16:47:01 by ngonzo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,18 @@ int		check_valid_input(int argc, char **argv)
 	if (flag == 1)
 		return (1);
 	return (0);
+}
+
+int		ft_smatoi(char *str)
+{
+	int		i;
+	int		number;
+
+	number = 0;
+	i = -1;
+	while(str[++i] != '\0')
+		number = 10 * number + (str[i] - '0');
+	return (number);
 }
 
 int		parser(t_param *all, int argc, char **argv)

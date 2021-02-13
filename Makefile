@@ -1,6 +1,10 @@
 NAME = philo_one
 FLAGS = -Wall -Wextra -Werror
-SOURCES = philo_one.c parser.c utils.c init_param.c
+SOURCES = philo_one.c \
+			ft_parser.c \
+			ft_utils.c \
+			ft_inits.c \
+			ft_philo.c
 OBJECTS = $(SOURCES:%.c=%.o)
 HEADER = philo_one.h
 
