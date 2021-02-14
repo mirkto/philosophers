@@ -34,6 +34,8 @@ pthread_mutex_unlock - открыть мьютекс
 время на сон - time_to_sleep;
 сколько надо поесть всем - number_of_times_each_must_eat;
 
+cat file1 | grep " 1 is eating" | wc -l
+
 ft_putendl("---");
 
 ft_putnbr(len);

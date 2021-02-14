@@ -14,7 +14,7 @@
 
 void	time_work(int timer)
 {
-	int		start_time;
+	long	start_time;
 
 	start_time = tl_time_now();
 	usleep(timer * 1000 - 7000);
@@ -40,6 +40,7 @@ void	*ft_philo(void *tmp)
 	t_philo	*philo;
 
 	philo = (t_philo *)tmp;
+	philo->time_to_start_eat = tl_time_now();
 	while (philo->num_of_each_must_eat != 0)
 	{
 		take_fork(philo);
@@ -48,8 +49,6 @@ void	*ft_philo(void *tmp)
 		tl_check_and_print(philo, "is thinking");
 		if (philo->num_of_each_must_eat != -1)
 			philo->num_of_each_must_eat--;
-		if (philo->num_of_each_must_eat == 0)
-			g_exit_status = 1;
 		if (g_exit_status == 1)
 			break ;
 	}

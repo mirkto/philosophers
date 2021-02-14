@@ -18,7 +18,7 @@ int		tl_perror(char *str)
 	return (1);
 }
 
-int		tl_time_now(void)
+long	tl_time_now(void)
 {
 	struct timeval	time_val;
 
@@ -30,7 +30,7 @@ int		time_passed(void)
 {
 	int		time;
 
-	time = tl_time_now() - g_time_start;
+	time = (int)(tl_time_now() - g_time_start);
 	if (time % 10 == 1)
 		time--;
 	return (time);

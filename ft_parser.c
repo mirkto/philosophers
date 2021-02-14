@@ -19,7 +19,7 @@ int		check_valid_input(int argc, char **argv)
 	int		flag;
 
 	if (argc < 5 || argc > 6)
-		return (tl_perror("Four or five argument only!"));
+		return (tl_perror("Error: Four or five argument only!"));
 	flag = 0;
 	arg = 0;
 	while (++arg < argc)
@@ -28,7 +28,7 @@ int		check_valid_input(int argc, char **argv)
 		while (argv[arg][++len] != '\0' || argv[arg][0] == '\0')
 			if (!('0' <= argv[arg][len] && argv[arg][len] <= '9') || len == 4)
 			{
-				printf("Not valid argument %i\n", arg);
+				printf("Error: Not valid argument %i\n", arg);
 				flag = 1;
 				break ;
 			}
@@ -38,7 +38,7 @@ int		check_valid_input(int argc, char **argv)
 	return (0);
 }
 
-int		ft_smatoi(char *str)
+int		ft_miniatoi(char *str)
 {
 	int		i;
 	int		number;
@@ -54,15 +54,21 @@ int		ft_parser(t_param *all, int argc, char **argv)
 {
 	if (check_valid_input(argc, argv))
 		return (1);
-	all->number_of_philo = ft_smatoi(argv[1]);
-	all->time_to_die = ft_smatoi(argv[2]);
-	all->time_to_eat = ft_smatoi(argv[3]);
-	all->time_to_sleep = ft_smatoi(argv[4]);
+	all->number_of_philo = ft_miniatoi(argv[1]);
+	all->time_to_die = ft_miniatoi(argv[2]);
+	all->time_to_eat = ft_miniatoi(argv[3]);
+	all->time_to_sleep = ft_miniatoi(argv[4]);
 	if (argc == 6)
-		all->number_of_times_each_must_eat = ft_smatoi(argv[5]);
+		all->number_of_times_each_must_eat = ft_miniatoi(argv[5]);
 	else
 		all->number_of_times_each_must_eat = -1;
 	if (all->number_of_philo < 2 || all->number_of_philo > 200)
-		return (tl_perror("Not valid number of philosophers"));
+		return (tl_perror("Error: Not valid number of philosophers"));
+	if (all->time_to_die < 60)
+		return (tl_perror("Error: Not valid time_to_die"));
+	if (all->time_to_eat < 60)
+		return (tl_perror("Error: Not valid time_to_eat"));
+	if (all->time_to_sleep < 60)
+		return (tl_perror("Error: Not valid time_to_sleep"));
 	return (0);
 }

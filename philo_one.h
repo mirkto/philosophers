@@ -37,13 +37,13 @@ typedef struct	s_philo
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				num_of_each_must_eat;
-	int				time_to_start_eat;
+	long			time_to_start_eat;
 	pthread_mutex_t	*left;
 	pthread_mutex_t	*right;
 }				t_philo;
 
 pthread_mutex_t	g_print_mutex;
-int				g_time_start;
+long			g_time_start;
 int				g_exit_status;
 
 int				ft_parser(t_param *all, int argc, char **argv);
@@ -53,7 +53,7 @@ int				ft_inits(t_param *all, t_philo *philo);
 void			*ft_philo(void *tmp);
 
 int				tl_perror(char *str);
-int				tl_time_now();
+long			tl_time_now();
 void			tl_check_and_print(t_philo *philo, char *str);
 
 #endif
