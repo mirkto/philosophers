@@ -23,10 +23,26 @@ pthread_create - создание потока
 pthread_join - ожидание завершения процесса
 pthread_detach - отсоединяет процесс (при завершении, все занимаемые им
 			ресурсы освобождаются и мы не можем отслеживать его завершение)
-pthread_mutex_init - создание мьютекса
-pthread_mutex_destroy - закрытие мьютекса
-pthread_mutex_lock - закрыть мьютекс
-pthread_mutex_unlock - открыть мьютекс
+// pthread_mutex_init - создание мьютекса
+// pthread_mutex_destroy - закрытие мьютекса
+// pthread_mutex_lock - закрыть мьютекс
+// pthread_mutex_unlock - открыть мьютекс
+sem_open - создает  или открывает семафор
+	#include <sys/stat.h>//for mode_t
+	#include <fcntl.h>//for O_CREAT
+	sem_t *name;
+	sem_open(const char *name, int oflag, mode_t mode, unsigned int value);
+	name = sem_open(name, O_CREAT, ?, 5);//return указатель на семафор or SEM_FAILED
+sem_close - закрывает семафор
+	int sem_close(sem_t *name);//return 0 or -1
+sem_unlink - удаляет семафор из системы
+	int sem_unlink(const char *name);//return 0 or -1
+sem_post - увеличивает/разблокирует семафор на который указывает name 
+	int sem_post(sem_t *sem);//return 0 or -1
+sem_wait - уменьшает/блокирует семафор на который указывает name
+
+// # include <sys/stat.h>//for mode_t
+// # include <fcntl.h>//for O_CREAT
 
 колличество философов и вилок - number_of_philo;
 время смерти, если столько без еды - time_to_die;
@@ -34,6 +50,7 @@ pthread_mutex_unlock - открыть мьютекс
 время на сон - time_to_sleep;
 сколько надо поесть всем - number_of_times_each_must_eat;
 
+//---for_testing_philo---
 cat file1 | grep " 1 is eating" | wc -l
 
 ft_putendl("---");
