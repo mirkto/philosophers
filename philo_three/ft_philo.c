@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo_two.h"
+#include "philo_three.h"
 
 void	time_work(int timer)
 {
@@ -49,8 +49,8 @@ void	*ft_philo(void *tmp)
 		tl_check_and_print(philo, "is thinking");
 		if (philo->num_of_each_must_eat != -1)
 			philo->num_of_each_must_eat--;
-		if (g_exit_status == 1)
-			break ;
+		if (philo->num_of_each_must_eat == 0)
+			exit(0);
 	}
 	return (0);
 }

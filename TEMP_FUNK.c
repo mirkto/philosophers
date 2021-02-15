@@ -44,6 +44,11 @@ sem_wait - уменьшает/блокирует семафор на котор�
 // # include <sys/stat.h>//for mode_t
 // # include <fcntl.h>//for O_CREAT
 
+fork -
+	pid_t fork(void);
+waitpid - ожидание указанного дочернего процесса
+	pid_t waitpid(pid_t pid, int *status, int options);
+
 колличество философов и вилок - number_of_philo;
 время смерти, если столько без еды - time_to_die;
 время на еду - time_to_eat;

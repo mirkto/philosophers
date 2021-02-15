@@ -25,8 +25,8 @@ void	time_work(int timer)
 void	take_fork(t_philo *philo)
 {
 	pthread_mutex_lock(philo->left);
-	tl_check_and_print(philo, "has taken a fork");
 	pthread_mutex_lock(philo->right);
+	tl_check_and_print(philo, "has taken a fork");
 	tl_check_and_print(philo, "has taken a fork");
 	philo->time_to_start_eat = tl_time_now();
 	tl_check_and_print(philo, "is eating");

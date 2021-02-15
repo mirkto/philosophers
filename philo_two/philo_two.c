@@ -25,7 +25,7 @@ int		check_death(t_param *all, t_philo *philo)
 			time_of_famine = (int)(tl_time_now() - philo[i].time_to_start_eat);
 			if (time_of_famine > all->time_to_die)
 			{
-				if (philo[i].num_of_each_must_eat == -1)
+				if (philo[i].num_of_each_must_eat != 0)
 					tl_check_and_print(&philo[i], "dead");
 				g_exit_status = 1;
 				return (1);
