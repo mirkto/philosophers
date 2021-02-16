@@ -50,7 +50,10 @@ void	*ft_philo(void *tmp)
 		if (philo->num_of_each_must_eat != -1)
 			philo->num_of_each_must_eat--;
 		if (philo->num_of_each_must_eat == 0)
+		{
+			sem_wait(g_print_sem);
 			exit(0);
+		}
 	}
 	return (0);
 }

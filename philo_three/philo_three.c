@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo_one.c                                        :+:      :+:    :+:   */
+/*   philo_three.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ngonzo <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/01/26 15:53:34 by ngonzo            #+#    #+#             */
-/*   Updated: 2021/01/26 15:53:39 by ngonzo           ###   ########.fr       */
+/*   Created: 2021/02/16 17:37:31 by ngonzo            #+#    #+#             */
+/*   Updated: 2021/02/16 17:37:34 by ngonzo           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	*check_death(void *tmp)
 		if (time_of_famine > philo->time_to_die)
 		{
 			if (philo->num_of_each_must_eat != 0)
-				tl_check_and_print(philo, "dead");
+				tl_check_and_print(philo, "*dead");
 			break ;
 		}
 	}
@@ -52,7 +52,6 @@ void	wait_philo(t_philo *philo, int pid[])
 	sem_unlink("/print_sem");
 	sem_close(g_fork_sem);
 	sem_unlink("/fork_sem");
-	usleep(50);
 }
 
 int		start_live(t_philo *philo, pthread_t *p_check_death)

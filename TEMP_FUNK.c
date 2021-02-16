@@ -43,29 +43,14 @@ sem_wait - уменьшает/блокирует семафор на котор�
 
 // # include <sys/stat.h>//for mode_t
 // # include <fcntl.h>//for O_CREAT
-
-fork -
+fork - создание дочернего процесса
 	pid_t fork(void);
 waitpid - ожидание указанного дочернего процесса
 	pid_t waitpid(pid_t pid, int *status, int options);
 
-колличество философов и вилок - number_of_philo;
-время смерти, если столько без еды - time_to_die;
-время на еду - time_to_eat;
-время на сон - time_to_sleep;
-сколько надо поесть всем - number_of_times_each_must_eat;
-
 //---for_testing_philo---
+./philo_one 5 800 200 200 4 > file1
 cat file1 | grep " 1 is eating" | wc -l
-
-ft_putendl("---");
-
-ft_putnbr(len);
-ft_putendl("");
-
-write(1, "\n", 1);
-
-alias mm="make && ./minishell"
 
 //-----пример_работы_gettimeofday--------
 #include <sys/time.h>
@@ -108,152 +93,3 @@ printf("%i\n", all.time_to_eat);
 printf("%i\n", all.time_to_sleep);
 printf("%i\n", all.number_of_times_each_must_eat);
 //-----------------------
-
-// void	*p_time(void *tmp)
-// {
-// 	t_param	*all = tmp;
-// 	int		i;
-// 	long	time;
-
-// 	time = 0;
-// 	while ()
-// }
-	// pthread_create(&all.p_time, NULL, p_time, (void *)&all);
-	// pthread_join(all.p_exit, NULL);
-
-
-
-
-int	init_philo(t_param *all)
-{
-	pthread_t	p[all->number_of_philo];
-	// pthread_t	p;
-	int			i;
-
-	i = 0;
-	while (i < all->number_of_philo)
-	{
-		// if (pthread_create(&p, NULL, philo, (void *)all) == 0)
-		// 	pthread_detach(p);
-		// else
-		if (pthread_create(&p[i], NULL, philo, (void *)all) != 0)
-		{
-			printf("---|Alart|--- %d philo is not born! ---|Alart|---", i + 1);
-			return (1);
-		}
-		// usleep(50);//--time after born philo
-		i++;
-	}
-	return (0);
-}
-
-
-
-
-// void	*philo(void *tmp)
-// {
-// 	t_param *all = tmp;
-// 	int		philo_num;
-// 	long	time;
-// 	long	time_eat;
-// 	pthread_mutex_t	*mutex_left_fork;
-// 	pthread_mutex_t	*mutex_right_fork;
-
-// 	time_eat = -1;
-// 	philo_num = all->num++;
-// 	// printf("Philosopher %i is ready\n", philo_num);//---
-// 	mutex_left_fork = &all->fork_mutex[philo_num - 1];
-// 	mutex_right_fork = &all->fork_mutex[philo_num % all->number_of_philo];
-// 	while (all->exit_status == 0)
-// 	{
-// 		pthread_mutex_lock(mutex_left_fork);
-// 		time = time_passed(all->time_start);
-// 		tl_check_and_print(all, philo_num, time, "taken a fork\n");
-// 		pthread_mutex_lock(mutex_right_fork);
-// 		time = time_passed(all->time_start);
-// 		tl_check_and_print(all, philo_num, time, "taken a fork\n");
-
-// 		time = time_passed(all->time_start);
-// 		all->philo_life_status[philo_num - 1] = tl_time_now();
-// 		tl_check_and_print(all, philo_num, time, "is eating\n");
-// 		usleep(all->time_to_eat);
-// 		// monie(all->time_to_eat);
-// 		pthread_mutex_unlock(mutex_left_fork);
-// 		pthread_mutex_unlock(mutex_right_fork);
-
-// 		time = time_passed(all->time_start);
-// 		tl_check_and_print(all, philo_num, time, "is sleeping\n");
-// 		usleep(all->time_to_sleep);
-
-// 		time = time_passed(all->time_start);
-// 		tl_check_and_print(all, philo_num, time, "is thinking\n");
-
-// 		// while (1)
-// 		// {
-// 		// 	all->time_to_die;
-// 		// }
-
-// 		pthread_mutex_lock(&all->print_mutex);
-// 		if (all->exit_status == 0)
-// 		{
-// 			all->philo_life_status[philo_num - 1] = 1;
-// 			all->exit_status = 1;
-// 		}
-// 		pthread_mutex_unlock(&all->print_mutex);
-// 		// pthread_join(all->p_exit, NULL);
-// 	}
-// 	return (NULL);
-// }
-
-	// int			i;
-
-	// if (!(all->philo_life_status = malloc(sizeof(int) * all->number_of_philo)))
-	// 	return (tl_perror("Error: malloc: inits philo_life_status"));
-	// i = 0;
-	// while (++i < all->number_of_philo)
-	// {
-	// 	all->philo_life_status[i] = 0;
-	// 	i++;
-	// }
-	// ---
-
-
-
-	//----------------------------
-// void	*p_exit(void *tmp)
-// {
-// 	t_param	*all = tmp;
-// 	int		i;
-// 	long	time;
-
-// 	while (1)
-// 	{
-// 		// time = sleep_and_time(all, 10000);
-// 		// usleep(5000);
-// 		// time = time_passed(all->time_start);
-// 		i = 0;
-// 		while (i < all->number_of_philo)
-// 		{
-// 			// printf("---| %li %li |---\n", (tl_time_now() - all->philo_life_status[i]), all->time_to_die);
-
-// 			// if ((tl_time_now() - all->philo_life_status[i]) > all->time_to_die && all->philo_life_status[i] != 0)
-// 			if (all->philo_life_status[i] == 0)
-// 			{
-// 				printf("%li %i is died\n", time, i + 1);
-// 				write(1, "Exit\n", 5);
-// 				return (0);
-// 			}
-// 			i++;
-// 		}
-// 	}
-// }
-
-int		ft_strlen(char *str)
-{
-	int		i;
-
-	i = 0;
-	while (str[i])
-		i++;
-	return (i);
-}

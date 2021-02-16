@@ -39,6 +39,11 @@ int		time_passed(void)
 void	tl_check_and_print(t_philo *philo, char *str)
 {
 	sem_wait(g_print_sem);
+	if (str[0] == '*')
+	{
+		printf("%i %i %s\n", time_passed(), philo->philo_name, ++str);
+		return ;
+	}
 	printf("%i %i %s\n", time_passed(), philo->philo_name, str);
 	sem_post(g_print_sem);
 }
